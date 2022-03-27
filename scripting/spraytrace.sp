@@ -68,6 +68,12 @@
 *
 *	Change Log
 *	----------
+*	03/28/2022 - v5.8c
+*	- Exclude empty sprays at world origin
+*	- Fix ambiguous targeting command buffers using player name. Switched to UserIDs instead.
+*	- Fix drug punishment option translation exception
+*	- Optimize Format calls using FormatEx instead
+*	- Fix SM 1.7+ compiler warnings
 *
 *	5/1/2011 - v5.8a
 *	- Fixed translations acting weirdly
@@ -249,7 +255,7 @@
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
 
-#define PLUGIN_VERSION "5.8a"
+#define PLUGIN_VERSION "5.8c"
 #define MAXDIS 0
 #define REFRESHRATE 1
 #define TBANTIME 2
