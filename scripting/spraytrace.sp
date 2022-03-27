@@ -279,8 +279,8 @@
 //Nican: I am doing all this global for those "happy" people who spray something and quit the server
 new Float:g_arrSprayTrace[MAXPLAYERS + 1][3];
 new String:g_arrSprayName[MAXPLAYERS + 1][64];
-new String:g_arrSprayID[MAXPLAYERS + 1][32];
-new String:g_arrMenuSprayID[MAXPLAYERS + 1][32];
+new String:g_arrSprayID[MAXPLAYERS + 1][MAX_AUTHID_LENGTH];
+new String:g_arrMenuSprayID[MAXPLAYERS + 1][MAX_AUTHID_LENGTH];
 new g_arrSprayTime[MAXPLAYERS + 1];
 
 // Misc. globals
@@ -305,7 +305,7 @@ public OnPluginStart() {
 	LoadTranslations("spraytrace.phrases");
 	LoadTranslations("common.phrases");
 
-	CreateConVar("sm_spray_version", PLUGIN_VERSION, "Spray tracer plugin version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	CreateConVar("sm_spray_version", PLUGIN_VERSION, "Spray tracer plugin version", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
  
 	RegAdminCmd("sm_spraytrace", TestTrace, ADMFLAG_BAN, "Look up the owner of the logo in front of you.");
 	RegAdminCmd("sm_removespray", RemoveSpray, ADMFLAG_BAN, "Remove the logo in front of you.");
@@ -399,8 +399,8 @@ public Action:PlayerSpray(const String:szTempEntName[], const arrClients[], iCli
 		TE_ReadVector("m_vecOrigin", g_arrSprayTrace[client]);
 
 		g_arrSprayTime[client] = RoundFloat(GetGameTime());
-		GetClientName(client, g_arrSprayName[client], 64);
-		GetClientAuthString(client, g_arrSprayID[client], 32);
+		GetClientName(client, g_arrSprayName[client], sizeof(g_arrSprayName[]));
+		GetClientAuthId(client, AuthId_Engine, g_arrSprayID[client], sizeof(g_arrSprayID[]));
 	}
 }
 
@@ -439,7 +439,7 @@ public Action:CheckAllTraces(Handle:hTimer, any:useless) {
 
 		if(GetPlayerEye(i, vecPos)) {
 			for(new a = 1; a <= MaxClients; a++) {
-				if(GetVectorDistance(vecPos, g_arrSprayTrace[a]) <= GetConVarFloat(g_arrCVars[MAXDIS])) {
+				if(g_arrSprayID[a][0] != '\0' && GetVectorDistance(vecPos, g_arrSprayTrace[a]) <= GetConVarFloat(g_arrCVars[MAXDIS])) {
 					new AdminId:admin = GetUserAdmin(i);
 
 					if(!(GetConVarInt(g_arrCVars[ADMINONLY]) == 1) || (admin != INVALID_ADMIN_ID)) {
@@ -485,8 +485,8 @@ public Action:TestTrace(client, args) {
 	new Float:vecPos[3];
 
 	if(GetPlayerEye(client, vecPos)) {
-	 	for(new i = 1; i<= MaxClients; i++) {
-			if(GetVectorDistance(vecPos, g_arrSprayTrace[i]) <= GetConVarFloat(g_arrCVars[MAXDIS])) {
+	 	for(new i = 1; i <= MaxClients; i++) {
+			if(g_arrSprayID[i][0] != '\0' && GetVectorDistance(vecPos, g_arrSprayTrace[i]) <= GetConVarFloat(g_arrCVars[MAXDIS])) {
 				new time = RoundFloat(GetGameTime()) - g_arrSprayTime[i];
 
 				PrintToChat(client, "[Spray Trace] %T", "Spray By", client, g_arrSprayName[i], g_arrSprayID[i], time);
@@ -514,12 +514,12 @@ public Action:RemoveSpray(client, args) {
 	new Float:vecPos[3];
 
 	if(GetPlayerEye(client, vecPos)) {
-		new String:szAdminName[32];
+		new String:szAdminName[MAX_NAME_LENGTH];
 
-		GetClientName(client, szAdminName, 31);
+		GetClientName(client, szAdminName, sizeof(szAdminName));
 
-	 	for(new i = 1; i<= MaxClients; i++) {
-			if(GetVectorDistance(vecPos, g_arrSprayTrace[i]) <= GetConVarFloat(g_arrCVars[MAXDIS])) {
+	 	for(new i = 1; i <= MaxClients; i++) {
+			if(g_arrSprayID[i][0] != '\0' && GetVectorDistance(vecPos, g_arrSprayTrace[i]) <= GetConVarFloat(g_arrCVars[MAXDIS])) {
 				new Float:vecEndPos[3];
 
 				PrintToChat(client, "[Spray Trace] %T", "Spray By", client, g_arrSprayName[i], g_arrSprayID[i], RoundFloat(GetGameTime()) - g_arrSprayTime[i]);
@@ -580,12 +580,12 @@ public GoSpray(client, target) {
 	new Float:vecEndPos[3];
 
 	if(GetPlayerEye(client, vecEndPos) && IsClientInGame(client) && IsClientInGame(target)) {
-		new String:targetName[32];
-		new String:szAdminName[32];
+		new String:targetName[MAX_NAME_LENGTH];
+		new String:szAdminName[MAX_NAME_LENGTH];
 		new traceEntIndex = TR_GetEntityIndex();
 
-		GetClientName(target, targetName, 31);
-		GetClientName(client, szAdminName, 31);
+		GetClientName(target, targetName, sizeof(targetName));
+		GetClientName(client, szAdminName, sizeof(szAdminName));
 
 		SprayDecal(target, traceEntIndex, vecEndPos);
 		EmitSoundToAll("misc/sprayer.wav", client, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.6);
@@ -793,9 +793,9 @@ public Action:AdminMenu(client, sprayer) {
 public AdminMenuHandler(Handle:hMenu, MenuAction:action, client, itemNum) {
 	if ( action == MenuAction_Select ) {
 		new String:szInfo[32];
-		new String:szSprayerName[64];
-		new String:szSprayerID[32];
-		new String:szAdminName[64];
+		new String:szSprayerName[MAX_NAME_LENGTH];
+		new String:szSprayerID[MAX_AUTHID_LENGTH];
+		new String:szAdminName[MAX_NAME_LENGTH];
 		new sprayer;
 
 		szSprayerID = g_arrMenuSprayID[client];
@@ -968,10 +968,10 @@ Helper Methods
 */
 
 public GetClientFromAuthID(const String:szAuthID[]) {
-	new String:szOtherAuthID[32];
-	for ( new i = 1; i <= GetMaxClients(); i++ ) {
-		if (IsClientInGame(i) && !IsFakeClient(i) ) {
-			GetClientAuthString(i, szOtherAuthID, 32);
+	new String:szOtherAuthID[MAX_AUTHID_LENGTH];
+	for ( new i = 1; i <= MaxClients; i++ ) {
+		if (IsClientInGame(i) && !IsFakeClient(i)) {
+			GetClientAuthId(i, AuthId_Engine, szOtherAuthID, sizeof(szOtherAuthID));
 
 			if ( strcmp(szOtherAuthID, szAuthID) == 0 )
 				return i;
@@ -1033,10 +1033,7 @@ public SprayDecal(client, entIndex, Float:vecPos[3]) {
 
 public Action:Undrug(Handle:hTimer, any:client) {
 	if(IsValidClient(client)) {
-		new String:clientName[32];
-		GetClientName(client, clientName, 31);
-
-		ServerCommand("sm_undrug \"%s\"", clientName);
+		ServerCommand("sm_drug #%i 0", GetClientUserId(client));
 	}
 
 	return Plugin_Handled;
