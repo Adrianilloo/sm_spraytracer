@@ -761,7 +761,7 @@ public Action:AdminMenu(client, sprayer) {
 
 		if(GetConVarInt(g_arrCVars[DRUGTIME]) > 0) {
 			new String:szDrug[128];
-			FormatEx(szDrug, sizeof(szDrug), "%T", "szDrug", client);
+			FormatEx(szDrug, sizeof(szDrug), "%T", "Drug", client);
 			AddMenuItem(hMenu, "drug", szDrug);
 		}
 
