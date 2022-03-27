@@ -667,7 +667,7 @@ public AdminMenu_TraceSpray(Handle:hTopMenu, TopMenuAction:action, TopMenuObject
 		return;
 
 	if (action == TopMenuAction_DisplayOption)
-		Format(szBuffer, iMaxLength, "%T", "Trace", param);
+		FormatEx(szBuffer, iMaxLength, "%T", "Trace", param);
 	else if (action == TopMenuAction_SelectOption)
 		TestTrace(param, 0);
 }
@@ -677,7 +677,7 @@ public AdminMenu_SprayRemove(Handle:hTopMenu, TopMenuAction:action, TopMenuObjec
 		return;
 
 	if (action == TopMenuAction_DisplayOption)
-		Format(szBuffer, iMaxLength, "%T", "Remove", param);
+		FormatEx(szBuffer, iMaxLength, "%T", "Remove", param);
 	else if (action == TopMenuAction_SelectOption)
 		RemoveSpray(param, 0);
 }
@@ -687,7 +687,7 @@ public AdminMenu_AdminSpray(Handle:hTopMenu, TopMenuAction:action, TopMenuObject
 		return;
 
 	if (action == TopMenuAction_DisplayOption)
-		Format(szBuffer, iMaxLength, "%T", "AdminSpray", param);
+		FormatEx(szBuffer, iMaxLength, "%T", "AdminSpray", param);
 	else if (action == TopMenuAction_SelectOption)
 		DisplayAdminSprayMenu(param);
 }
@@ -707,79 +707,79 @@ public Action:AdminMenu(client, sprayer) {
 	SetMenuTitle(hMenu, "%T", "Title", client, g_arrSprayName[sprayer], g_arrSprayID[sprayer], RoundFloat(GetGameTime()) - g_arrSprayTime[sprayer]);
 
 	new String:szWarn[128];
-	Format(szWarn, 127, "%T", "Warn", client);
+	FormatEx(szWarn, sizeof(szWarn), "%T", "Warn", client);
 	AddMenuItem(hMenu, "warn", szWarn);
 
 	if(!GetConVarBool(g_arrCVars[RESTRICT]) || GetAdminFlag(GetUserAdmin(client), Admin_Ban)) {
 		if(GetConVarInt(g_arrCVars[SLAPDMG]) > 0) {
 			new String:szSlap[128];
-			Format(szSlap, 127, "%T", "SlapWarn", client, GetConVarInt(g_arrCVars[SLAPDMG]));
+			FormatEx(szSlap, sizeof(szSlap), "%T", "SlapWarn", client, GetConVarInt(g_arrCVars[SLAPDMG]));
 			AddMenuItem(hMenu, "slap", szSlap);
 		}
 
 		if(GetConVarBool(g_arrCVars[USESLAY])) {
 			new String:szSlay[128];
-			Format(szSlay, 127, "%T", "Slay", client);
+			FormatEx(szSlay, sizeof(szSlay), "%T", "Slay", client);
 			AddMenuItem(hMenu, "slay", szSlay);
 		}
 
 		if(GetConVarBool(g_arrCVars[USEBURN])) {
 			new String:szBurn[128];
-			Format(szBurn, 127, "%T", "BurnWarn", client, GetConVarInt(g_arrCVars[BURNTIME]));
+			FormatEx(szBurn, sizeof(szBurn), "%T", "BurnWarn", client, GetConVarInt(g_arrCVars[BURNTIME]));
 			AddMenuItem(hMenu, "burn", szBurn);
 		}
 
 		if(GetConVarBool(g_arrCVars[USEFREEZE])) {
 			new String:szFreeze[128];
-			Format(szFreeze, 127, "%T", "Freeze", client);
+			FormatEx(szFreeze, sizeof(szFreeze), "%T", "Freeze", client);
 			AddMenuItem(hMenu, "freeze", szFreeze);
 		}
 
 		if(GetConVarBool(g_arrCVars[USEBEACON])) {
 			new String:szBeacon[128];
-			Format(szBeacon, 127, "%T", "Beacon", client);
+			FormatEx(szBeacon, sizeof(szBeacon), "%T", "Beacon", client);
 			AddMenuItem(hMenu, "beacon", szBeacon);
 		}
 
 		if(GetConVarBool(g_arrCVars[USEFREEZEBOMB])) {
 			new String:szFreezeBomb[128];
-			Format(szFreezeBomb, 127, "%T", "FreezeBomb", client);
+			FormatEx(szFreezeBomb, sizeof(szFreezeBomb), "%T", "FreezeBomb", client);
 			AddMenuItem(hMenu, "freezebomb", szFreezeBomb);
 		}
 
 		if(GetConVarBool(g_arrCVars[USEFIREBOMB])) {
 			new String:szFireBomb[128];
-			Format(szFireBomb, 127, "%T", "FireBomb", client);
+			FormatEx(szFireBomb, sizeof(szFireBomb), "%T", "FireBomb", client);
 			AddMenuItem(hMenu, "firebomb", szFireBomb);
 		}
 
 		if(GetConVarBool(g_arrCVars[USETIMEBOMB])) {
 			new String:szTimeBomb[128];
-			Format(szTimeBomb, 127, "%T", "TimeBomb", client);
+			FormatEx(szTimeBomb, sizeof(szTimeBomb), "%T", "TimeBomb", client);
 			AddMenuItem(hMenu, "timebomb", szTimeBomb);
 		}
 
 		if(GetConVarInt(g_arrCVars[DRUGTIME]) > 0) {
 			new String:szDrug[128];
-			Format(szDrug, 127, "%T", "szDrug", client);
+			FormatEx(szDrug, sizeof(szDrug), "%T", "szDrug", client);
 			AddMenuItem(hMenu, "drug", szDrug);
 		}
 
 		if(GetConVarBool(g_arrCVars[USEKICK])) {
 			new String:szKick[128];
-			Format(szKick, 127, "%T", "Kick", client);
+			FormatEx(szKick, sizeof(szKick), "%T", "Kick", client);
 			AddMenuItem(hMenu, "kick", szKick);
 		}
 
 		if(GetConVarInt(g_arrCVars[TBANTIME]) > 0) {
 			new String:szBan[128];
-			Format(szBan, 127, "%T", "Ban", client, GetConVarInt(g_arrCVars[TBANTIME]));
+			FormatEx(szBan, sizeof(szBan), "%T", "Ban", client, GetConVarInt(g_arrCVars[TBANTIME]));
 			AddMenuItem(hMenu, "ban", szBan);
 		}
 
 		if(GetConVarBool(g_arrCVars[USEPBAN])) {
 			new String:szPBan[128];
-			Format(szPBan, 127, "%T", "PBan", client);
+			FormatEx(szPBan, sizeof(szPBan), "%T", "PBan", client);
 			AddMenuItem(hMenu, "pban", szPBan);
 		}
 	}
@@ -808,7 +808,7 @@ public AdminMenuHandler(Handle:hMenu, MenuAction:action, client, itemNum) {
 			if (sprayer) {
 				new iTime = 0;
 				new String:szBad[128];
-				Format(szBad, 127, "%T", "Bad Spray Logo", LANG_SERVER);
+				FormatEx(szBad, sizeof(szBad), "%T", "Bad Spray Logo", LANG_SERVER);
 	
 				if(strcmp(szInfo, "ban") == 0)
 					iTime = GetConVarInt(g_arrCVars[TBANTIME]);
@@ -887,49 +887,49 @@ public AdminMenuHandler(Handle:hMenu, MenuAction:action, client, itemNum) {
 				PrintToChat(sprayer, "\x03[Spray Trace] %T", "Please change", sprayer);
 				PrintToChat(client, "\x04[Spray Trace] %T", "Slayed And Warned", client, szSprayerName, szSprayerID);
 				LogAction(client, -1, "[Spray Trace] %T", "Log Slayed And Warned", LANG_SERVER, szAdminName, szSprayerName, szSprayerID);
-				ClientCommand(client, "sm_slay \"%s\"", szSprayerName);
+				ClientCommand(client, "sm_slay #%i", GetClientUserId(sprayer));
 				AdminMenu(client, sprayer);
 			}
 			else if ( strcmp(szInfo, "burn") == 0 ) {
 				PrintToChat(sprayer, "\x03[Spray Trace] %T", "Please change", sprayer);
 				PrintToChat(client, "\x04[Spray Trace] %T", "Burnt And Warned", client, szSprayerName, szSprayerID);
 				LogAction(client, -1, "[Spray Trace] %T", "Log Burnt And Warned", LANG_SERVER, szAdminName, szSprayerName, szSprayerID);
-				ClientCommand(client, "sm_burn \"%s\" %d", szSprayerName, GetConVarInt(g_arrCVars[BURNTIME]));
+				ClientCommand(client, "sm_burn #%i %d", GetClientUserId(sprayer), GetConVarInt(g_arrCVars[BURNTIME]));
 				AdminMenu(client, sprayer);
 			}
 			else if ( strcmp(szInfo, "freeze", false) == 0 ) {
 				PrintToChat(sprayer, "\x03[Spray Trace] %T", "Please change", sprayer);
 				PrintToChat(client, "\x04[Spray Trace] %T", "Froze", client, szSprayerName, szSprayerID);
 				LogAction(client, -1, "[Spray Trace] %T", "Log Froze", LANG_SERVER, szAdminName, szSprayerName, szSprayerID);
-				ClientCommand(client, "sm_freeze \"%s\"", szSprayerName);
+				ClientCommand(client, "sm_freeze #%i", GetClientUserId(sprayer));
 				AdminMenu(client, sprayer);
 			}
 			else if ( strcmp(szInfo, "beacon", false) == 0 ) {
 				PrintToChat(sprayer, "\x03[Spray Trace] %T", "Please change", sprayer);
 				PrintToChat(client, "\x04[Spray Trace] %T", "Beaconed", client, szSprayerName, szSprayerID);
 				LogAction(client, -1, "[Spray Trace] %T", "Log Beaconed", LANG_SERVER, szAdminName, szSprayerName, szSprayerID);
-				ClientCommand(client, "sm_beacon \"%s\"", szSprayerName);
+				ClientCommand(client, "sm_beacon #%i", GetClientUserId(sprayer));
 				AdminMenu(client, sprayer);
 			}
 			else if ( strcmp(szInfo, "freezebomb", false) == 0 ) {
 				PrintToChat(sprayer, "\x03[Spray Trace] %T", "Please change", sprayer);
 				PrintToChat(client, "\x04[Spray Trace] %T", "FreezeBombed", client, szSprayerName, szSprayerID);
 				LogAction(client, -1, "[Spray Trace] %T", "Log FreezeBombed", LANG_SERVER, szAdminName, szSprayerName, szSprayerID);
-				ClientCommand(client, "sm_freezebomb \"%s\"", szSprayerName);
+				ClientCommand(client, "sm_freezebomb #%i", GetClientUserId(sprayer));
 				AdminMenu(client, sprayer);
 			}
 			else if ( strcmp(szInfo, "firebomb", false) == 0 ) {
 				PrintToChat(sprayer, "\x03[Spray Trace] %T", "Please change", sprayer);
 				PrintToChat(client, "\x04[Spray Trace] %T", "FireBombed", client, szSprayerName, szSprayerID);
 				LogAction(client, -1, "[Spray Trace] %T", "Log FireBombed", LANG_SERVER, szAdminName, szSprayerName, szSprayerID);
-				ClientCommand(client, "sm_firebomb \"%s\"", szSprayerName);
+				ClientCommand(client, "sm_firebomb #%i", GetClientUserId(sprayer));
 				AdminMenu(client, sprayer);
 			}
 			else if ( strcmp(szInfo, "timebomb", false) == 0 ) {
 				PrintToChat(sprayer, "\x03[Spray Trace] %T", "Please change", sprayer);
 				PrintToChat(client, "\x04[Spray Trace] %T", "TimeBombed", client, szSprayerName, szSprayerID);
 				LogAction(client, -1, "[Spray Trace] %T", "Log TimeBombed", LANG_SERVER, szAdminName, szSprayerName, szSprayerID);
-				ClientCommand(client, "sm_timebomb \"%s\"", szSprayerName);
+				ClientCommand(client, "sm_timebomb #%i", GetClientUserId(sprayer));
 				AdminMenu(client, sprayer);
 			}
 			else if ( strcmp(szInfo, "drug", false) == 0 ) {
@@ -937,7 +937,7 @@ public AdminMenuHandler(Handle:hMenu, MenuAction:action, client, itemNum) {
 				PrintToChat(client, "\x04[Spray Trace] %T", "Drugged", client, szSprayerName, szSprayerID);
 				LogAction(client, -1, "[Spray Trace] %T", "Log Drugged", LANG_SERVER, szAdminName, szSprayerName, szSprayerID);
 				CreateTimer(GetConVarFloat(g_arrCVars[DRUGTIME]), Undrug, sprayer, TIMER_FLAG_NO_MAPCHANGE);
-				ClientCommand(client, "sm_drug \"%s\"", szSprayerName);
+				ClientCommand(client, "sm_drug #%i", GetClientUserId(sprayer));
 				AdminMenu(client, sprayer);
 			}
 			else if ( strcmp(szInfo, "kick") == 0 ) {
