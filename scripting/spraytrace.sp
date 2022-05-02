@@ -282,6 +282,10 @@
 #define HUDTIME 23
 #define NUMCVARS 24
 
+#if (!defined MAX_AUTHID_LENGTH)
+#define MAX_AUTHID_LENGTH 64 /**< Maximum buffer required to store any AuthID type */
+#endif // !MAX_AUTHID_LENGTH
+
 //Nican: I am doing all this global for those "happy" people who spray something and quit the server
 new Float:g_arrSprayTrace[MAXPLAYERS + 1][3];
 new String:g_arrSprayName[MAXPLAYERS + 1][64];
